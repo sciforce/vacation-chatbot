@@ -1,0 +1,14 @@
+---
+info:
+    app:
+        name: ${name}
+        description: ${description}
+        version: ${version}
+        built-on: ${builtOn}
+
+spring:
+    data:
+        mongodb:
+          host: localhost
+          port: 27017
+          database: devbot
