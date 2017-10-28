@@ -25,39 +25,39 @@ public class UserModel {
      */
     @Id
     @Field( FieldNames.ID )
-    public String id;
+    private String id;
 
     /**
      * The user unique identifier.
      */
     @Field( FieldNames.USER_ID )
-    public String userId;
+    private String userId;
 
     /**
      * The user name.
      */
     @Field( FieldNames.NAME )
-    public String name;
+    private String name;
 
     /**
      * The user name aliases.
      */
     @Field( FieldNames.ALIASES )
-    public List<String> aliases;
+    private List<String> aliases;
 
     /**
      * The total amount of valid vacation days that the user still have this year.
      */
     @Field( FieldNames.VACATION_TOTAL )
-    public int vacationTotal;
+    private int vacationTotal;
 
     /**
      * The year this document belongs to.
      */
     @Field( FieldNames.YEAR )
-    public int year;
+    private int year;
 
-    static final class FieldNames {
+    public static final class FieldNames {
         public static final String ID = "_id";
         public static final String USER_ID = "user-id";
         public static final String NAME = "name";

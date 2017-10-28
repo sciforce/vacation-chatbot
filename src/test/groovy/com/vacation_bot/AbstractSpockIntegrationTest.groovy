@@ -4,6 +4,7 @@ import com.vacation_bot.repositories.UserModelRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -22,5 +23,12 @@ abstract class AbstractSpockIntegrationTest extends Specification {
 
     def setup() {
         assert mongoTemplate
+        resetMongoDatabase()
+    }
+
+    protected void resetMongoDatabase() {
+        mongoTemplate.collectionNames.findAll { !it.startsWith( 'system.' ) }.each {
+            mongoTemplate.remove( new Query(), it )
+        }
     }
 }
