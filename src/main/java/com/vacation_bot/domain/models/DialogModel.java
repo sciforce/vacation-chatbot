@@ -23,33 +23,33 @@ public class DialogModel {
      */
     @Id
     @Field( FieldNames.ID ) // it cannot override the _id name. But now we can clearly use constant as field name instead of string.
-    public String id;
+    private String id;
 
     /**
      * The user identified.
      */
     @Field( FieldNames.USER_ID )
-    public String userId;
+    private String userId;
 
     /**
      * The theme of the dialog.
      */
     @Field( FieldNames.THEME )
-    public String theme;
+    private String theme;
 
     /**
      * The result status of the dialog.
      */
     @Field( FieldNames.STATUS )
-    public DialogStatus status;
+    private DialogStatus status;
 
     /**
      * The collection of all dialog phrases.
      */
     @Field( FieldNames.PHRASES )
-    public List<PhraseItem> phrases;
+    private List<PhraseItem> phrases;
 
-    static final class FieldNames {
+    public static final class FieldNames {
         public static final String ID = "_id";
         public static final String USER_ID = "user-id";
         public static final String THEME = "theme";

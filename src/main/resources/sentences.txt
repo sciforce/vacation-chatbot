@@ -1,0 +1,30 @@
+print(db.sentence.insert({'_id': ObjectId(),
+                            'type': 'REQUEST_DAYS_LEFT',
+                            'examples': ['How many days do _PERSON have?', 'Do I have any vacation days?', 'How many days do I still have?'],
+                            'responses': {'ok': ['You still have _NUM days.', 'There are _NUM days.'],
+                                            'fail': ['You used all your days. Get back to work!']}
+                          }));
+print(db.sentence.insert({'_id': ObjectId(),
+                            'type': 'REQUEST_VACATION_LIST',
+                            'examples': ['Show me my last _NUM vacation reservation?'],
+                            'responses': {'ok': ['See the list below.', 'Your request is completed.'],
+                                            'fail': ['I can not find your vacation information.']}
+                          }));
+print(db.sentence.insert({'_id': ObjectId(),
+                            'type': 'REGISTER_VACATION',
+                            'examples': ['I need a vacation.', 'I want to ask for vacation.', 'Can I take a vacation for one week starting from _DATE?', 'Can I take a day off?', 'Please, register a vacation for from _DATE to _DATE.'],
+                            'responses': {'ok': ['Yes. No problem.'],
+                                            'fail': ['Sorry but you have already used all your vacations.']}
+                          }));
+print(db.sentence.insert({'_id': ObjectId(),
+                            'type': 'EDIT_VACATION',
+                            'examples': ['I want to change my vacation days.'],
+                            'responses': {'ok': ['Yes. You can do this. Give me more details for new vacation.', 'How do you want to change it?', 'I will try to do this for you. What is your new vacation period?'],
+                                            'fail': []}
+                          }));
+print(db.sentence.insert({'_id': ObjectId(),
+                            'type': 'CANCEL_CURRENT_OPERATION',
+                            'examples': ['Oh no. It was wrong days.', 'Cancel my request.'],
+                            'responses': {'ok': ['Do you really want to cancel your previous request?'],
+                                            'fail': []}
+                          }));

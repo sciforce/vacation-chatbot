@@ -17,15 +17,15 @@ public class PhraseItem {
      * The phrase text. Usually one sentence.
      */
     @Field( FieldNames.PHRASE )
-    public String phrase;
+    private String phrase;
 
     /**
      * The date code the phrase war submitted.
      */
     @Field( FieldNames.DATE_CODE )
-    public long dateCode;
+    private long dateCode;
 
-    static final class FieldNames {
+    public static final class FieldNames {
         public static final String PHRASE = "phrase";
         public static final String DATE_CODE = "date-code";
     }

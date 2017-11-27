@@ -21,39 +21,39 @@ public class VacationModel {
      */
     @Id
     @Field( FieldNames.ID )
-    public String id;
+    private String id;
 
     /**
      * The user identifier who reserves vacation.
      */
     @Field( FieldNames.USER_ID )
-    public String userId;
+    private String userId;
 
     /**
      * The dialog based on which the vacation was reserved.
      */
     @Field( FieldNames.DIALOG_ID )
-    public String dialogId;
+    private String dialogId;
 
     /**
      * The amount of reserved days.
      */
     @Field( FieldNames.DAYS )
-    public int days;
+    private int days;
 
     /**
      * The start date of vacations.
      */
     @Field( FieldNames.START_DATE )
-    public long startDate;
+    private long startDate;
 
     /**
      * The end date of vacations.
      */
     @Field( FieldNames.END_DATE )
-    public long endDate;
+    private long endDate;
 
-    static final class FieldNames {
+    public static final class FieldNames {
         public static final String ID = "_id";
         public static final String USER_ID = "user-id";
         public static final String DIALOG_ID = "dialog-id";

@@ -1,9 +1,11 @@
 package com.vacation_bot
 
+import com.vacation_bot.core.classification.ClassificationService
 import com.vacation_bot.repositories.UserModelRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -20,7 +22,17 @@ abstract class AbstractSpockIntegrationTest extends Specification {
     @Autowired
     UserModelRepository userRepository
 
+    @Autowired
+    ClassificationService classificationService
+
     def setup() {
         assert mongoTemplate
+        resetMongoDatabase()
+    }
+
+    protected void resetMongoDatabase() {
+        mongoTemplate.collectionNames.findAll { !it.startsWith( 'system.' ) }.each {
+            if ( it != 'sentence' ) { mongoTemplate.remove( new Query(), it ) } // in the sentence collection we pre-populate sentence types with examples
+        }
     }
 }
