@@ -1,14 +1,15 @@
 package com.vacation_bot.core.classification;
 
 import com.vacation_bot.core.customization.CustomizedSentence;
+import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.shared.MessageHeaders;
 import com.vacation_bot.shared.SentenceClass;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -17,34 +18,32 @@ import static java.util.stream.Collectors.toList;
  */
 public class ClassificationService {
 
-    private final static List<String> REQUEST_INFO_WORDS = Arrays.asList( "days", "how", "many", "left", "have", "has", "still", "much", "any",  "does", "do" );
+    public WordsService wordsService;
 
-    private final static List<String> LIST_VACATION_WORDS = Arrays.asList( "show", "list", "last", "all" );
-
-    private final static List<String> REGISTER_VACATION_WORDS = Arrays.asList( "need", "want", "take", "can", "day", "off", "from", "till", "register" );
-
-    private final static List<String> EDIT_VACATION_WORDS = Arrays.asList( "want", "change", "shift", "move", "can", "edit", "correct" );
-
-    private final static List<String> CANCEL_WORDS = Arrays.asList( "cancel", "undo", "forgot", "wrong", "no" );
+    public ClassificationService( WordsService aWordsService ) {
+        wordsService = aWordsService;
+    }
 
     @ServiceActivator
     public Message<CustomizedSentence> classifySentence( Message<CustomizedSentence> message ) {
-        SentenceClass classResult = classify( message.getPayload().getCustomizedSentence() );
+        SentenceClass classResult = processSentence( message.getPayload().getCustomizedSentence() );
 
         return MessageBuilder.fromMessage( message )
                 .setHeader( MessageHeaders.SENTENCE_CLASS_HEADER, classResult.toString() )
                 .build();
     }
 
-    private SentenceClass classify( List<String> sentenceWords ) {
+    private SentenceClass processSentence(List<String> sentenceWords ) {
+        Map<String, List<String>> wordsPerSentenceType = wordsService.calculateWordsWorth();
+
         SentenceClass classResult = SentenceClass.UNKNOWN;
         int matches = 0;
 
-        int classOneCount = countCommonElements( sentenceWords, REQUEST_INFO_WORDS );
-        int classTwoCount = countCommonElements( sentenceWords, LIST_VACATION_WORDS );
-        int classThreeCount = countCommonElements( sentenceWords, REGISTER_VACATION_WORDS );
-        int classFourCount = countCommonElements( sentenceWords, EDIT_VACATION_WORDS );
-        int classFiveCount = countCommonElements( sentenceWords, CANCEL_WORDS );
+        int classOneCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.REQUEST_DAYS_LEFT.toString() ) );
+        int classTwoCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.REQUEST_VACATION_LIST.toString() ) );
+        int classThreeCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.REGISTER_VACATION.toString() ) );
+        int classFourCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.EDIT_VACATION.toString() ) );
+        int classFiveCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.CANCEL_CURRENT_OPERATION.toString() ) );
 
         if ( classOneCount > matches ) {
             classResult = SentenceClass.REQUEST_DAYS_LEFT;

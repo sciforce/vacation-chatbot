@@ -18,13 +18,13 @@ import java.util.regex.Pattern;
 //TODO: understand day, week, month, year... write numbers
 public class CustomizationService extends BaseService {
 
-    private static final String DATE_TOKEN = "_DATE";
+    private static final String DATE_TOKEN = "_date";
 
-    private static final String NUMBER_TOKEN = "_NUM";
+    private static final String NUMBER_TOKEN = "_num";
 
-    private static final String PERSON_TOKEN = "_PERSON";
+    private static final String PERSON_TOKEN = "_person";
 
-    public CustomizationService( RepositoryFactory repositoryFactory) {
+    public CustomizationService( RepositoryFactory repositoryFactory ) {
         super( repositoryFactory );
     }
 
@@ -38,7 +38,7 @@ public class CustomizationService extends BaseService {
         // first find dates in the string. We should look for dates before removing the punctuation.
         updatedSentence = findDates( updatedSentence, customizedSentence ); // set the result into object
 
-        updatedSentence = updatedSentence.replaceAll("\\p{P}", ""); //removes punctuation
+        updatedSentence = updatedSentence.replaceAll("\\p{P}", "" ); //removes punctuation
 
         // and replace with _DATE token
         updatedSentence = replaceDatesWithToken( updatedSentence, customizedSentence );
