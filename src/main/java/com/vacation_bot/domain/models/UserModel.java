@@ -17,7 +17,6 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Document( collection = "user" )
-@CompoundIndex( name = "unique_idx", def = "{ 'user-id': 1, 'year': 1 }", unique = true )
 public class UserModel {
 
     /**
@@ -28,16 +27,16 @@ public class UserModel {
     private String id;
 
     /**
-     * The user unique identifier.
-     */
-    @Field( FieldNames.USER_ID )
-    private String userId;
-
-    /**
      * The user name.
      */
     @Field( FieldNames.NAME )
     private String name;
+
+    /**
+     * The user email.
+     */
+    @Field(FieldNames.EMAIL)
+    private String email;
 
     /**
      * The user name aliases.
@@ -45,24 +44,10 @@ public class UserModel {
     @Field( FieldNames.ALIASES )
     private List<String> aliases;
 
-    /**
-     * The total amount of valid vacation days that the user still have this year.
-     */
-    @Field( FieldNames.VACATION_TOTAL )
-    private int vacationTotal;
-
-    /**
-     * The year this document belongs to.
-     */
-    @Field( FieldNames.YEAR )
-    private int year;
-
     public static final class FieldNames {
         public static final String ID = "_id";
-        public static final String USER_ID = "user-id";
         public static final String NAME = "name";
         public static final String ALIASES = "aliases";
-        public static final String VACATION_TOTAL = "vacation-total";
-        public static final String YEAR = "year";
+        public static final String EMAIL = "email";
     }
 }
