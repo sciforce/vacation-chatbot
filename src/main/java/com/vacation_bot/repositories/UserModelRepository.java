@@ -6,4 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 /**
  * Talks to {@link UserModel} collection in the database.
  */
-public interface UserModelRepository extends MongoRepository<UserModel, String>, UserModelRepositoryCustom { }
+public interface UserModelRepository extends MongoRepository<UserModel, String>, UserModelRepositoryCustom {
+
+    UserModel findByName(String name);
+
+}

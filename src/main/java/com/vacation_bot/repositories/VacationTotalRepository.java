@@ -4,4 +4,7 @@ import com.vacation_bot.domain.models.VacationTotal;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface VacationTotalRepository extends MongoRepository<VacationTotal, String> {
+
+    VacationTotal findByUserIdAndYear(String id, int year);
+
 }
