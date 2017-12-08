@@ -6,7 +6,6 @@ import com.vacation_bot.domain.models.VacationTotal;
 import com.vacation_bot.repositories.UserModelRepository;
 import com.vacation_bot.repositories.VacationModelRepository;
 import com.vacation_bot.repositories.VacationTotalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,14 +15,19 @@ import java.util.Calendar;
 @Service
 public class VacationServiceImpl implements VacationService{
 
-    @Autowired
     private VacationModelRepository vacationModelRepository;
 
-    @Autowired
     private VacationTotalRepository vacationTotalRepository;
 
-    @Autowired
     private UserModelRepository userModelRepository;
+
+    public VacationServiceImpl(VacationModelRepository vacationModelRepository,
+                               VacationTotalRepository vacationTotalRepository,
+                               UserModelRepository userModelRepository) {
+        this.vacationTotalRepository = vacationTotalRepository;
+        this.vacationModelRepository = vacationModelRepository;
+        this.userModelRepository = userModelRepository;
+    }
 
     @Override
     public String createVacation(String userName, String start, String end) {
