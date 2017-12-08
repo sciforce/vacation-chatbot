@@ -71,7 +71,7 @@ public class VacationServiceImpl implements VacationService{
 
             //if vacationTotal not null check dates
             if (period.getYears() == 0 && period.getMonths() == 0 &&
-                    vacationTotal.getVacationTotal() <= period.getDays()) {
+                    vacationTotal.getVacationTotal() >= period.getDays()) {
 
                 vacationTotal.setVacationTotal(vacationTotal.getVacationTotal() - period.getDays());
                 vacationTotalRepository.save(vacationTotal);

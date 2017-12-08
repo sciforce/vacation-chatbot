@@ -24,8 +24,9 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest{
         and: 'given valid user object '
         def user = new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')
 
-        and: 'given valid vacation total object'
-        def vacationTotal = new VacationTotal(userId: user.getId(), year: 2017)
+        and: 'given valid vacation object'
+        def vacationTotal1 = new VacationTotal(userId: user.getId(), vacationTotal: 15, year: 2017)
+        //def vacationTotal2 = new VacationTotal()
 
         and: 'valid input data'
         def userName = 'Alex'
@@ -36,12 +37,12 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest{
         def result = vacationService.createVacation(userName, startDate, endDate)
 
         then: 'result'
-        1 * userModelRepository.findByName() >> user
-        1 * vacationTotalRepository.findByUserIdAndYear() >> vacationTotal
-        1 * vacationTotalRepository.save() >> void
-        1 * vacationModelRepository.save() >> void
+        1 * userModelRepository.findByName(user.name) >> user
+        1 * vacationTotalRepository.findByUserIdAndYear(user.id, 2017) >> vacationTotal1
+//        1 * vacationTotalRepository.save(vacationTotal2) >> void
+
         print result
-        result.contains('successfully completed!')
+        !result.isEmpty()
 
     }
 
