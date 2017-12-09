@@ -1,7 +1,7 @@
 package com.vacation_bot.vacation
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.core.vacation.VacationServiceImpl
+import com.vacation_bot.core.vacation.VacationService
 import com.vacation_bot.domain.models.UserModel
 import com.vacation_bot.domain.models.VacationTotal
 import com.vacation_bot.repositories.UserModelRepository
@@ -17,16 +17,8 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest{
         def vacationTotalRepository = Mock(VacationTotalRepository)
         def vacationModelRepository = Mock(VacationModelRepository)
 
-        def vacationService = new VacationServiceImpl(vacationModelRepository,
+        def vacationService = new VacationService(vacationModelRepository,
                 vacationTotalRepository, userModelRepository)
-
-
-        and: 'given valid user object '
-        def user = new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')
-
-        and: 'given valid vacation object'
-        def vacationTotal1 = new VacationTotal(userId: user.getId(), vacationTotal: 15, year: 2017)
-        //def vacationTotal2 = new VacationTotal()
 
         and: 'valid input data'
         def userName = 'Alex'
@@ -37,12 +29,17 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest{
         def result = vacationService.createVacation(userName, startDate, endDate)
 
         then: 'result'
-        1 * userModelRepository.findByName(user.name) >> user
-        1 * vacationTotalRepository.findByUserIdAndYear(user.id, 2017) >> vacationTotal1
-//        1 * vacationTotalRepository.save(vacationTotal2) >> void
+        1 * userModelRepository.findByNameOrAliases(user.getName(), Arrays.asList(user.getName())) >> user
+        1 * vacationTotalRepository.findByUserIdAndYear(user.getId(), 2017) >> vacationTotal
 
-        print result
-        !result.isEmpty()
+        println result
+        result == (expectedResult)
+
+        where:
+        user                                                            ||   vacationTotal                                                               ||  expectedResult
+        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   new VacationTotal(userId: user.getId(), vacationTotal: 15, year: 2017)      ||  "You can not receive vacation. You just have 15 days."
+        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   new VacationTotal(userId: user.getId(), vacationTotal: 25, year: 2017)      ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You still have 7 days"
+        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   null                                                                        ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You still have 2 days"
 
     }
 
