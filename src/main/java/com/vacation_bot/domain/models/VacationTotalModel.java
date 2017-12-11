@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @Setter
 @EqualsAndHashCode
-@Document
+@Document(collection = "vacation_total")
 @CompoundIndex(name = "unique_idx", def = "{ 'user-id': 1, 'year': 1 }", unique = true)
-public class VacationTotal {
+public class VacationTotalModel {
 
     /**
      * Database generated primary key of the document.

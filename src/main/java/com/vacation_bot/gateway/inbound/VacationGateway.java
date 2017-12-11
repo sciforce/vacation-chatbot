@@ -1,6 +1,6 @@
 package com.vacation_bot.gateway.inbound;
 
-import com.vacation_bot.core.vacation.IVacationService;
+import com.vacation_bot.core.vacation.VacationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class VacationGateway {
 
+    private final VacationService vacationService;
+
     @Autowired
-    private IVacationService vacationService;
+    public VacationGateway(final VacationService vacationService) {
+        this.vacationService = vacationService;
+    }
 
     @PostMapping()
     public String getResponse(@RequestPart("user-name") String userName,

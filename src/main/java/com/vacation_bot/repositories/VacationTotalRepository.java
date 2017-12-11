@@ -1,10 +1,10 @@
 package com.vacation_bot.repositories;
 
-import com.vacation_bot.domain.models.VacationTotal;
+import com.vacation_bot.domain.models.VacationTotalModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface VacationTotalRepository extends MongoRepository<VacationTotal, String> {
+public interface VacationTotalRepository extends MongoRepository<VacationTotalModel, String> {
 
-    VacationTotal findByUserIdAndYear(String id, int year);
+    VacationTotalModel findByUserIdAndYear(String id, int year);
 
 }

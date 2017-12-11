@@ -1,64 +1,62 @@
 package com.vacation_bot.core.vacation;
 
+import com.vacation_bot.core.BaseService;
 import com.vacation_bot.domain.models.UserModel;
 import com.vacation_bot.domain.models.VacationModel;
-import com.vacation_bot.domain.models.VacationTotal;
-import com.vacation_bot.repositories.UserModelRepository;
-import com.vacation_bot.repositories.VacationModelRepository;
-import com.vacation_bot.repositories.VacationTotalRepository;
+import com.vacation_bot.domain.models.VacationTotalModel;
+import com.vacation_bot.repositories.RepositoryFactory;
+import com.vacation_bot.spring.exception.RepositoryException;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
-//TODO fixes in skype
+/**
+ * Reserve a vacation to the user.
+ */
 @Service
-public class VacationService implements IVacationService {
+public class VacationService extends BaseService{
 
-    private VacationModelRepository vacationModelRepository;
+    private static final int DEFAULT_VACATION_TOTAL_DAYS = 20;
 
-    private VacationTotalRepository vacationTotalRepository;
+    private static final String USER_NOT_FOUND_MESSAGE = "USER NOT FOUND";
 
-    private UserModelRepository userModelRepository;
+    private int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
-    private final int DEFAULT_VACATION_TOTAL_DAYS = 20;
-
-    public VacationService(VacationModelRepository vacationModelRepository,
-                           VacationTotalRepository vacationTotalRepository,
-                           UserModelRepository userModelRepository) {
-        this.vacationTotalRepository = vacationTotalRepository;
-        this.vacationModelRepository = vacationModelRepository;
-        this.userModelRepository = userModelRepository;
+    public VacationService(RepositoryFactory factory) {
+        super(factory);
     }
 
-    @Override
-    public String createVacation(String userName, String start, String end) {
+    public String createVacation(final String userName, final String _startDate, final String _endDate) {
 
-        LocalDate startDate = LocalDate.parse(start);
-        LocalDate endDate = LocalDate.parse(end);
+        LocalDate startDate = LocalDate.parse(_startDate);
+        LocalDate endDate = LocalDate.parse(_endDate);
 
         //the days reserved by user
-        Period period = Period.between(startDate, endDate);
+        int period = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
         //found user by name or aliases
-        UserModel user = userModelRepository.findByNameOrAliases(userName, Arrays.asList(userName));
+        UserModel user = Optional.ofNullable(getUserModelRepository()
+                .findByNameOrAliases(userName, Arrays.asList(userName)))
+                .orElseThrow(() -> new RepositoryException(USER_NOT_FOUND_MESSAGE));
 
         // find vacation total by user and current year
-        VacationTotal vacationTotal = vacationTotalRepository
-                .findByUserIdAndYear(user.getId(), Calendar.getInstance().get(Calendar.YEAR));
+        VacationTotalModel vacationTotal = getVacationTotalRepository()
+                .findByUserIdAndYear(user.getId(), currentYear);
 
         //check if vacationTotal is null. if it isn't, create new vacation total and vacation model.
         if (vacationTotal == null) {
 
-            VacationTotal newVacationTotal = new VacationTotal();
+            VacationTotalModel newVacationTotal = new VacationTotalModel();
             newVacationTotal.setUserId(user.getId());
+
             //set default total of days
             newVacationTotal.setVacationTotal(DEFAULT_VACATION_TOTAL_DAYS);
-            newVacationTotal.setYear(Calendar.getInstance().get(Calendar.YEAR));
-
-            vacationTotalRepository.save(newVacationTotal);
+            newVacationTotal.setYear(currentYear);
 
             return compareVacationDaysAndReservedDays(newVacationTotal, user, startDate, endDate, period);
 
@@ -71,31 +69,30 @@ public class VacationService implements IVacationService {
 
     }
 
-    private String compareVacationDaysAndReservedDays(VacationTotal vacationTotal, UserModel user,
-                                                  LocalDate startDate, LocalDate endDate, Period period) {
-        if (period.getYears() == 0 && period.getMonths() == 0 &&
-                vacationTotal.getVacationTotal() >= period.getDays()) {
+    private String compareVacationDaysAndReservedDays(VacationTotalModel vacationTotal, UserModel user,
+                                                      LocalDate startDate, LocalDate endDate, int period) {
+        if (vacationTotal.getVacationTotal() >= period) {
 
-            vacationTotal.setVacationTotal(vacationTotal.getVacationTotal() - period.getDays());
-            vacationTotalRepository.save(vacationTotal);
+            vacationTotal.setVacationTotal(vacationTotal.getVacationTotal() - period);
+            getVacationTotalRepository().save(vacationTotal);
 
             createVacationModel(user, startDate, endDate, period);
 
             return "The registration of your vacation from " + startDate + " to " + endDate +
-                    " was successfully completed! You still have " + vacationTotal.getVacationTotal() + " days";
+                    " was successfully completed! You have left " + vacationTotal.getVacationTotal() + " days";
 
         } else {
-            return "You can not receive vacation. You just have "
+            return "You can not receive vacation. You have "
                     + vacationTotal.getVacationTotal() + " days.";
         }
     }
 
-    private void createVacationModel(UserModel user, LocalDate startDate, LocalDate endDate, Period period) {
+    private void createVacationModel(UserModel user, LocalDate startDate, LocalDate endDate, int period) {
 
         VacationModel vacationModel = new VacationModel();
         vacationModel.setUserId(user.getId());
         vacationModel.setDialogId(String.valueOf(UUID.randomUUID()));
-        vacationModel.setDays(period.getDays());
+        vacationModel.setDays(period);
 
         LocalTime localTime = LocalTime.now();
 
@@ -109,7 +106,7 @@ public class VacationService implements IVacationService {
                         atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         );
 
-        vacationModelRepository.save(vacationModel);
+        getVacationModelRepository().save(vacationModel);
 
     }
 
