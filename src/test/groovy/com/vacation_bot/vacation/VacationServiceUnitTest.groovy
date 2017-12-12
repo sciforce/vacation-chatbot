@@ -9,9 +9,23 @@ import com.vacation_bot.repositories.UserModelRepository
 import com.vacation_bot.repositories.VacationModelRepository
 import com.vacation_bot.repositories.VacationTotalRepository
 import com.vacation_bot.spring.exception.RepositoryException
+import spock.lang.Shared
 
 
-class VacationServiceUnitTest extends AbstractSpockUnitTest{
+class VacationServiceUnitTest extends AbstractSpockUnitTest {
+
+    def inputUserName = 'Alex'
+    def inputStartDate = '2017-10-02'
+    def inputEndDate = '2017-10-20'
+
+    @Shared
+    def validUser = Optional.of(new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com'))
+
+    @Shared
+    def validVacationTotal1 = new VacationTotalModel(userId: validUser.get().getId(), vacationTotal: 15, year: 2017)
+
+    @Shared
+    def validVacationTotal2 = new VacationTotalModel(userId: validUser.get().getId(), vacationTotal: 25, year: 2017)
 
     def 'exercise createVacation'() {
         given: 'given valid subject under test'
@@ -22,33 +36,37 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest{
         def factory = new DefaultRepositoryFactory([userModelRepository, vacationTotalRepository, vacationModelRepository])
         def vacationService = new VacationService(factory)
 
-        and: 'valid input data'
-        def userName = 'Alex'
-        def startDate = '2017-10-02'
-        def endDate = '2017-10-20'
-
-        when: 'the exercised method is called when user is null'
-        vacationService.createVacation(userName, startDate, endDate)
-
-        then: 'repositories return expected exception'
-        1 * userModelRepository.findByNameOrAliases(userName, Arrays.asList(userName)) >> null
-
-        thrown(RepositoryException)
-
         when: 'the exercised method is called'
-        def result2 = vacationService.createVacation(userName, startDate, endDate)
+        def result = vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
 
         then: 'repositories return expected values'
-        1 * userModelRepository.findByNameOrAliases(user.getName(), Arrays.asList(user.getName())) >> user
-        1 * vacationTotalRepository.findByUserIdAndYear(user.getId(), 2017) >> vacationTotal
+        1 * userModelRepository.findByName(inputUserName) >> Optional.ofNullable(null)
+        1 * userModelRepository.findByAliases(Arrays.asList(inputUserName)) >> user
+        1 * vacationTotalRepository.findByUserIdAndYear(user.get().getId(), 2017) >> vacationTotal
 
-        result2 == expectedResult
+        result == expectedResult
 
         where:
-        user                                                            ||   vacationTotal                                                               ||  expectedResult
-        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   new VacationTotalModel(userId: user.getId(), vacationTotal: 15, year: 2017) ||  "You can not receive vacation. You have 15 days."
-        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   new VacationTotalModel(userId: user.getId(), vacationTotal: 25, year: 2017) ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You have left 7 days"
-        new UserModel(id: '1', name: 'Alex', email: 'alex@mail.com')    ||   null                                                                        ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You have left 2 days"
+        user        ||   vacationTotal        ||  expectedResult
+        validUser   ||   validVacationTotal1  ||  "You can not receive vacation. You have 15 days."
+        validUser   ||   validVacationTotal2  ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You have left 7 days"
+        validUser   ||   null                 ||  "The registration of your vacation from 2017-10-02 to 2017-10-20 was successfully completed! You have left 2 days"
+    }
+
+    def 'exercise createVacation with null'() {
+        given:
+        def userModelRepository = Mock(UserModelRepository)
+        def factory = new DefaultRepositoryFactory([userModelRepository])
+        def vacationService = new VacationService(factory)
+
+        when: 'the exercised method is called when user is null'
+        vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
+
+        then: 'repositories return expected exception'
+        1 * userModelRepository.findByName(inputUserName) >> Optional.ofNullable(null)
+        1 * userModelRepository.findByAliases(Arrays.asList(inputUserName)) >> Optional.ofNullable(null)
+
+        thrown(RepositoryException)
     }
 
 }

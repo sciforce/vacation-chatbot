@@ -40,9 +40,9 @@ public class VacationService extends BaseService{
         int period = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
         //found user by name or aliases
-        UserModel user = Optional.ofNullable(getUserModelRepository()
-                .findByNameOrAliases(userName, Arrays.asList(userName)))
-                .orElseThrow(() -> new RepositoryException(USER_NOT_FOUND_MESSAGE));
+        UserModel user = getUserModelRepository().findByName(userName)
+                .orElse(getUserModelRepository().findByAliases(Arrays.asList(userName))
+                        .orElseThrow(() -> new RepositoryException(USER_NOT_FOUND_MESSAGE)));
 
         // find vacation total by user and current year
         VacationTotalModel vacationTotal = getVacationTotalRepository()
