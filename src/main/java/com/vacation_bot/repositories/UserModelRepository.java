@@ -11,8 +11,7 @@ import java.util.Optional;
  */
 public interface UserModelRepository extends MongoRepository<UserModel, String>, UserModelRepositoryCustom {
 
-    Optional<UserModel> findByName(String name);
+    Optional<UserModel> findByNameOrAliasesIn(String name, List<String> aliases);
 
-    Optional<UserModel> findByAliases(List<String> aliases);
 
 }

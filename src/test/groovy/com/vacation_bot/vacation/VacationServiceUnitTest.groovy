@@ -40,8 +40,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
         def result = vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
 
         then: 'repositories return expected values'
-        1 * userModelRepository.findByName(inputUserName) >> Optional.ofNullable(null)
-        1 * userModelRepository.findByAliases(Arrays.asList(inputUserName)) >> user
+        1 * userModelRepository.findByNameOrAliasesIn(inputUserName, Arrays.asList(inputUserName)) >> user
         1 * vacationTotalRepository.findByUserIdAndYear(user.get().getId(), 2017) >> vacationTotal
 
         result == expectedResult
@@ -63,8 +62,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
         vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
 
         then: 'repositories return expected exception'
-        1 * userModelRepository.findByName(inputUserName) >> Optional.ofNullable(null)
-        1 * userModelRepository.findByAliases(Arrays.asList(inputUserName)) >> Optional.ofNullable(null)
+        1 * userModelRepository.findByNameOrAliasesIn(inputUserName, Arrays.asList(inputUserName)) >> Optional.ofNullable(null)
 
         thrown(RepositoryException)
     }
