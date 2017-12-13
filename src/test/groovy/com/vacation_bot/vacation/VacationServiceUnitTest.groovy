@@ -11,7 +11,9 @@ import com.vacation_bot.repositories.VacationTotalRepository
 import com.vacation_bot.spring.exception.RepositoryException
 import spock.lang.Shared
 
-
+/**
+ * Unit level test for {@Link VacationService}
+ */
 class VacationServiceUnitTest extends AbstractSpockUnitTest {
 
     def inputUserName = 'Alex'

@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Represents the operation of vacation total reservation.
+ */
 @Getter
 @Setter
 @EqualsAndHashCode

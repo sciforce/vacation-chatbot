@@ -36,25 +36,19 @@ public class VacationService extends BaseService{
         LocalDate startDate = LocalDate.parse(_startDate);
         LocalDate endDate = LocalDate.parse(_endDate);
 
-        //the days reserved by user
         int period = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
-        //found user by name or aliases
         UserModel user = getUserModelRepository().findByNameOrAliasesIn(userName, Arrays.asList(userName))
                 .orElseThrow(() -> new RepositoryException(USER_NOT_FOUND_MESSAGE));
 
 
-        // find vacation total by user and current year
         VacationTotalModel vacationTotal = getVacationTotalRepository()
                 .findByUserIdAndYear(user.getId(), currentYear);
 
-        //check if vacationTotal is null. if it isn't, create new vacation total and vacation model.
         if (vacationTotal == null) {
 
             VacationTotalModel newVacationTotal = new VacationTotalModel();
             newVacationTotal.setUserId(user.getId());
-
-            //set default total of days
             newVacationTotal.setVacationTotal(DEFAULT_VACATION_TOTAL_DAYS);
             newVacationTotal.setYear(currentYear);
 
@@ -62,7 +56,6 @@ public class VacationService extends BaseService{
 
         } else {
 
-            //if vacationTotal not null check dates
             return compareVacationDaysAndReservedDays(vacationTotal, user, startDate, endDate, period);
 
         }
