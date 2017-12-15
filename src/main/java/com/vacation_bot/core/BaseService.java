@@ -29,8 +29,8 @@ public abstract class BaseService {
         return repositoryFactory.getRepository( VacationModelRepository.class );
     }
 
-    protected VacationTotalRepository getVacationTotalRepository() {
-        return repositoryFactory.getRepository( VacationTotalRepository.class );
+    protected VacationTotalModelRepository getVacationTotalRepository() {
+        return repositoryFactory.getRepository( VacationTotalModelRepository.class );
     }
 
 }

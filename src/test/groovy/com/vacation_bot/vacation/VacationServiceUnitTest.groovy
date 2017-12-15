@@ -7,7 +7,7 @@ import com.vacation_bot.domain.models.VacationTotalModel
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.UserModelRepository
 import com.vacation_bot.repositories.VacationModelRepository
-import com.vacation_bot.repositories.VacationTotalRepository
+import com.vacation_bot.repositories.VacationTotalModelRepository
 import com.vacation_bot.spring.exception.RepositoryException
 import spock.lang.Shared
 
@@ -32,7 +32,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
     def 'exercise createVacation'() {
         given: 'given valid subject under test'
         def userModelRepository = Mock(UserModelRepository)
-        def vacationTotalRepository = Mock(VacationTotalRepository)
+        def vacationTotalRepository = Mock(VacationTotalModelRepository)
         def vacationModelRepository = Mock(VacationModelRepository)
 
         def factory = new DefaultRepositoryFactory([userModelRepository, vacationTotalRepository, vacationModelRepository])

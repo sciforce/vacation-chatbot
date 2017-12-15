@@ -6,4 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 /**
  * Talks to {@link VacationModel} collection in the database.
  */
-public interface VacationModelRepository extends MongoRepository<VacationModel, String> { }
+public interface VacationModelRepository extends MongoRepository<VacationModel, String> {
+
+    VacationModel findByUserId(String userId);
+
+}

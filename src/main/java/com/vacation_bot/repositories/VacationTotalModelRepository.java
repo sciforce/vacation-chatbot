@@ -6,8 +6,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 /**
  * Talks to {@link VacationTotalModel} collection in the database.
  */
-public interface VacationTotalRepository extends MongoRepository<VacationTotalModel, String> {
+public interface VacationTotalModelRepository extends MongoRepository<VacationTotalModel, String> {
 
     VacationTotalModel findByUserIdAndYear(String id, int year);
+
+    VacationTotalModel findByUserId(String userId);
 
 }
