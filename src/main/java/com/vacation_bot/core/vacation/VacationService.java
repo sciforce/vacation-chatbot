@@ -71,8 +71,13 @@ public class VacationService extends BaseService{
 
             createVacationModel(user, startDate, endDate, period);
 
-            return "The registration of your vacation from " + startDate + " to " + endDate +
-                    " was successfully completed! You have left " + vacationTotal.getVacationTotal() + " days";
+            if (vacationTotal.getVacationTotal() > 0) {
+                return "The registration of your vacation from " + startDate + " to " + endDate +
+                        " was successfully completed! You have left " + vacationTotal.getVacationTotal() + " days";
+            } else {
+                return "The registration of your vacation from " + startDate + " to " + endDate +
+                        " was successfully completed! You don't have vacation days";
+            }
 
         } else {
             if (vacationTotal.getVacationTotal() > 0) {
