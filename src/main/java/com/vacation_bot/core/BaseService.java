@@ -1,8 +1,6 @@
 package com.vacation_bot.core;
 
-import com.vacation_bot.repositories.RepositoryFactory;
-import com.vacation_bot.repositories.SentenceModelRepository;
-import com.vacation_bot.repositories.UserModelRepository;
+import com.vacation_bot.repositories.*;
 
 /**
  * Base class for services.
@@ -26,4 +24,13 @@ public abstract class BaseService {
     protected SentenceModelRepository getSentenceModelRepository() {
         return repositoryFactory.getRepository( SentenceModelRepository.class );
     }
+
+    protected VacationModelRepository getVacationModelRepository() {
+        return repositoryFactory.getRepository( VacationModelRepository.class );
+    }
+
+    protected VacationTotalRepository getVacationTotalRepository() {
+        return repositoryFactory.getRepository( VacationTotalRepository.class );
+    }
+
 }

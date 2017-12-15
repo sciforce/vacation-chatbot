@@ -8,10 +8,13 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Represents the operation of vacation total reservation.
+ */
 @Getter
 @Setter
 @EqualsAndHashCode
-@Document
+@Document(collection = "vacation_total")
 @CompoundIndex(name = "unique_idx", def = "{ 'user-id': 1, 'year': 1 }", unique = true)
 public class VacationTotalModel {
 
