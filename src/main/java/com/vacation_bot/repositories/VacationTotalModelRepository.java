@@ -10,6 +10,4 @@ public interface VacationTotalModelRepository extends MongoRepository<VacationTo
 
     VacationTotalModel findByUserIdAndYear(String id, int year);
 
-    VacationTotalModel findByUserId(String userId);
-
 }

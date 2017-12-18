@@ -38,7 +38,7 @@ public class VacationService extends BaseService{
 
         int period = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
-        UserModel user = getUserModelRepository().findByNameOrAliasesIn(userName, Arrays.asList(userName.split(", ")))
+        UserModel user = getUserModelRepository().findByNameOrAliases(userName, userName)
                 .orElseThrow(() -> new RepositoryException(USER_NOT_FOUND_MESSAGE));
 
 
@@ -51,6 +51,8 @@ public class VacationService extends BaseService{
             newVacationTotal.setUserId(user.getId());
             newVacationTotal.setVacationTotal(DEFAULT_VACATION_TOTAL_DAYS);
             newVacationTotal.setYear(currentYear);
+
+            getVacationTotalRepository().save(newVacationTotal);
 
             return compareVacationDaysAndReservedDays(newVacationTotal, user, startDate, endDate, period);
 

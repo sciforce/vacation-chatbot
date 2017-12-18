@@ -18,9 +18,8 @@ public class VacationGateway {
     }
 
     @PostMapping()
-    public String getResponse(@RequestBody VacationRequestBody body){
-        String response = vacationService.createVacation(body.getUserName(), body.getStartDate(), body.getEndDate());
-        return response;
+    public String reserveVacation(@RequestBody VacationRequestBody body){
+        return vacationService.createVacation(body.getUserName(), body.getStartDate(), body.getEndDate());
     }
 
 }
