@@ -22,74 +22,36 @@ import java.time.temporal.ChronoUnit
 /**
  * Integration level test of {@Link VacationGateway}.
  */
+//validVacationTotal save to db just one time in 2nd and 3rd test
 class VacationIntegrationTest extends AbstractSpockIntegrationTest {
 
     def restTemplate = new TestRestTemplate()
 
     def headers = new HttpHeaders(accept: Arrays.asList(MediaType.APPLICATION_JSON))
 
-    String userId = UUID.randomUUID()
-    def userName = 'Alex'
-    def aliases = ['Batman', 'Joker', 'Superman']
+
     @Shared
     def startDate = '2017-10-02'
+
     @Shared
     def endDate = '2017-10-26'
 
     @Shared
-    def parsedStartDate = LocalDate.parse(startDate)
-    @Shared
-    def parsedEndDate = LocalDate.parse(endDate)
-    @Shared
-    String period = ChronoUnit.DAYS.between(parsedStartDate, parsedEndDate)
+    def static final DEFAULT_VACATION_TOTAL_DAYS = 20
 
-    def validUser = new UserModel(id: userId, name: userName, aliases: aliases)
-    def inputData = new VacationRequestBody(userName: userName, startDate: startDate, endDate: endDate)
+    static final String USER_ID = UUID.randomUUID()
+    def static final USER_NAME = 'Alex'
+    def static final ALIASES = ['Batman', 'Joker', 'Superman']
 
-    @Shared
-    def static final defaultVacationTotalDays = 20
+    def inputData = new VacationRequestBody(userName: USER_NAME, startDate: startDate, endDate: endDate)
 
-    def vacationTotalDays = 18
-    def vacationTotalYear = 2017
-    def validVacationTotal = new VacationTotalModel(userId: userId, vacationTotal: vacationTotalDays, year: vacationTotalYear)
+    static final int CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 
-    def 'exercise controller (vacation total is null)'() {
+    @Unroll
+    def 'exercise vacation gateway (vacation total is null)'() {
 
-        given: 'the user is saved to the db'
-        userRepository.save(validUser)
-
-        and: 'set new end date'
-        inputData.endDate = newEndDate
-
-        when: 'the controller is called'
-        String result = getResponse(inputData).getBody()
-
-        then: 'the result is correct'
-        result == expectedResult
-        def createdVacationTotal = vacationTotalRepository.findAll().stream().filter { e -> e.userId == userId && e.year == vacationTotalYear }.findFirst().get()
-        createdVacationTotal
-        createdVacationTotal.vacationTotal == expectedVacationTotalDays
-
-        def createdVacation = vacationModelRepository.findAll().stream().filter { e -> e.userId == userId }.findFirst()
-        def createdVacationPresent = createdVacation.isPresent()
-        createdVacationPresent == expectedCreatedVacation
-//        with(createdVacationPresent) {
-//            LocalDateTime.ofInstant(Instant.ofEpochMilli(createdVacation.get().startDate), ZoneOffset.UTC).toLocalDate() == parsedStartDate
-//            LocalDateTime.ofInstant(Instant.ofEpochMilli(createdVacation.get().endDate), ZoneOffset.UTC).toLocalDate() == LocalDate.parse(newEndDate)
-//        }
-
-        where:
-        newEndDate      ||  expectedCreatedVacation     ||  expectedVacationTotalDays                                                                           ||  expectedResult
-        '2017-10-15'    ||  true                        ||  defaultVacationTotalDays - ChronoUnit.DAYS.between(parsedStartDate, LocalDate.parse(newEndDate))    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${defaultVacationTotalDays - ChronoUnit.DAYS.between(parsedStartDate, LocalDate.parse(newEndDate))} days"
-        '2017-10-22'    ||  true                        ||  defaultVacationTotalDays - ChronoUnit.DAYS.between(parsedStartDate, LocalDate.parse(newEndDate))    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
-        '2017-10-25'    ||  false                       ||  20                                                                                                  ||  "You can not receive vacation. You have ${availableDays} days."
-    }
-
-    def 'exercise controller (vacation total is not null)'() {
-
-        given: 'the vacation total is saved to the db'
-        validVacationTotal.vacationTotal = newVacationTotalDays
-        vacationTotalRepository.save(validVacationTotal)
+        given: 'valid user'
+        def validUser = new UserModel(id: USER_ID, name: USER_NAME, aliases: ALIASES)
 
         and: 'the user is saved to the db'
         userRepository.save(validUser)
@@ -98,28 +60,42 @@ class VacationIntegrationTest extends AbstractSpockIntegrationTest {
         inputData.endDate = newEndDate
 
         when: 'the controller is called'
-        String result = getResponse(inputData).getBody()
+        String result = getResponse(inputData).body
 
-        then: 'result is correct'
+        then: 'the result is correct'
         result == expectedResult
-        validVacationTotal.vacationTotal == newVacationTotalDays
-        vacationModelRepository.findAll().isEmpty() == expectedVacationList
+        def createdVacationTotals = vacationTotalRepository.findAll()
+        1 == createdVacationTotals.size()
+        createdVacationTotals.first().vacationTotal == expectedVacationTotalDays
+
+        def createdUser = userRepository.findAll().first()
+        def vacationList = vacationModelRepository.findAll()
+        with(vacationList) {
+            if (vacationList) {
+                def firstVacation = vacationList.first()
+
+                USER_ID == createdUser.id
+                firstVacation.days == ChronoUnit.DAYS.between(LocalDate.parse(this.startDate), LocalDate.parse(newEndDate))
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(firstVacation.startDate), ZoneOffset.UTC).toLocalDate() == LocalDate.parse(this.startDate)
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(firstVacation.endDate), ZoneOffset.UTC).toLocalDate() == LocalDate.parse(newEndDate)
+            }
+        }
 
         where:
-        newEndDate      ||  newVacationTotalDays    ||  expectedVacationList    ||  expectedResult
-        '2017-10-15'    ||  20                      ||  false                    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${newVacationTotalDays - ChronoUnit.DAYS.between(parsedStartDate, LocalDate.parse(newEndDate))} days"
-        '2017-10-18'    ||  16                      ||  false                    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
-        '2017-10-25'    ||  5                       ||  true                   ||  "You can not receive vacation. You have ${newVacationTotalDays} days."
-        '2017-10-25'    ||  0                       ||  true                   ||  "You can not receive vacation. You have no vacation"
-
+        newEndDate      |   expectedVacationTotalDays              |  expectedResult
+        '2017-10-15'    |   getExpectedVacationDays(newEndDate)    |  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${getExpectedVacationDays(newEndDate)} days"
+        '2017-10-22'    |   getExpectedVacationDays(newEndDate)    |  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
+        '2017-10-25'    |   DEFAULT_VACATION_TOTAL_DAYS            |  "You can not receive vacation. You have ${expectedVacationTotalDays} days."
     }
 
-    def 'exercise controller (reserve by aliases)'() {
-        given: 'set aliases in input data '
-        inputData.setUserName(aliases[0])
+    @Unroll
+    def 'exercise vacation gateway (vacation total is not null)'() {
 
-        and: 'and change vacation total days'
-        validVacationTotal.setVacationTotal(newVacationTotalDays)
+        given: 'valid user'
+        def validUser = new UserModel(id: USER_ID, name: USER_NAME, aliases: ALIASES)
+
+        and: 'given vacation total'
+        def validVacationTotal = new VacationTotalModel(userId: USER_ID, vacationTotal: newVacationTotalDays, year: CURRENT_YEAR)
 
         and: 'the vacation total is saved to the db'
         vacationTotalRepository.save(validVacationTotal)
@@ -131,19 +107,61 @@ class VacationIntegrationTest extends AbstractSpockIntegrationTest {
         inputData.endDate = newEndDate
 
         when: 'the controller is called'
-        String result = getResponse(inputData).getBody()
+        String result = getResponse(inputData).body
 
         then: 'result is correct'
         result == expectedResult
+        validVacationTotal.vacationTotal == newVacationTotalDays
         vacationModelRepository.findAll().isEmpty() == expectedVacationList
 
         where:
-        newEndDate      ||  newVacationTotalDays    ||  expectedVacationList    ||  expectedResult
-        '2017-10-15'    ||  20                      ||  false                    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${newVacationTotalDays - ChronoUnit.DAYS.between(parsedStartDate, LocalDate.parse(newEndDate))} days"
-        '2017-10-18'    ||  16                      ||  false                    ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
-        '2017-10-25'    ||  5                       ||  true                   ||  "You can not receive vacation. You have ${newVacationTotalDays} days."
-        '2017-10-25'    ||  0                       ||  true                   ||  "You can not receive vacation. You have no vacation"
+        newVacationTotalDays    ||  expectedVacationList        |  newEndDate    ||  expectedResult
+        20                      ||  false                       |  '2017-10-15'  ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${getExpectedVacationDays(newEndDate)} days"
+        16                      ||  false                       |  '2017-10-18'  ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
+        5                       ||  true                        |  '2017-10-25'  ||  "You can not receive vacation. You have ${newVacationTotalDays} days."
+        0                       ||  true                        |  '2017-10-25'  ||  "You can not receive vacation. You have no vacation"
 
+    }
+
+    @Unroll
+    def 'exercise vacation gateway (reserve by aliases)'() {
+        given: 'set aliases in input data '
+        inputData.setUserName(ALIASES[0])
+
+        and: 'given valid user'
+        def validUser = new UserModel(id: USER_ID, name: USER_NAME, aliases: ALIASES)
+
+        and: 'the user is saved to the db'
+        userRepository.save(validUser)
+
+        and: 'given vacation total'
+        def validVacationTotal = new VacationTotalModel(userId: USER_ID, vacationTotal: newVacationTotalDays, year: CURRENT_YEAR)
+
+        and: 'the vacation total is saved to the db'
+        vacationTotalRepository.save(validVacationTotal)
+
+        and: 'set new end date'
+        inputData.endDate = newEndDate
+
+        when: 'the controller is called'
+        String result = getResponse(inputData).body
+
+        then: 'result is correct'
+        result == expectedResult
+        validVacationTotal.vacationTotal == newVacationTotalDays
+        vacationModelRepository.findAll().isEmpty() == expectedVacationList
+
+        where:
+        newVacationTotalDays    ||  expectedVacationList        |  newEndDate    ||  expectedResult
+        20                      ||  false                       |  '2017-10-15'  ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You have left ${getExpectedVacationDays(newEndDate)} days"
+        16                      ||  false                       |  '2017-10-18'  ||  "The registration of your vacation from ${startDate} to ${newEndDate} was successfully completed! You don't have vacation days"
+        5                       ||  true                        |  '2017-10-25'  ||  "You can not receive vacation. You have ${newVacationTotalDays} days."
+        0                       ||  true                        |  '2017-10-25'  ||  "You can not receive vacation. You have no vacation"
+
+    }
+
+    private int getExpectedVacationDays(String endDate) {
+        DEFAULT_VACATION_TOTAL_DAYS - ChronoUnit.DAYS.between(LocalDate.parse(startDate), LocalDate.parse(endDate))
     }
 
     private ResponseEntity<String> getResponse(VacationRequestBody inputData) {
