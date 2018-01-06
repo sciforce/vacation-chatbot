@@ -22,7 +22,6 @@ import java.time.temporal.ChronoUnit
 /**
  * Integration level test of {@Link VacationGateway}.
  */
-//validVacationTotal save to db just one time in 2nd and 3rd test
 class VacationIntegrationTest extends AbstractSpockIntegrationTest {
 
     def restTemplate = new TestRestTemplate()
