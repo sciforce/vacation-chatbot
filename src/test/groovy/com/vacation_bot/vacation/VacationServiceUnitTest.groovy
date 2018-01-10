@@ -7,7 +7,7 @@ import com.vacation_bot.domain.models.VacationTotalModel
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.UserModelRepository
 import com.vacation_bot.repositories.VacationModelRepository
-import com.vacation_bot.repositories.VacationTotalRepository
+import com.vacation_bot.repositories.VacationTotalModelRepository
 import com.vacation_bot.spring.exception.RepositoryException
 import spock.lang.Shared
 
@@ -32,7 +32,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
     def 'exercise createVacation'() {
         given: 'given valid subject under test'
         def userModelRepository = Mock(UserModelRepository)
-        def vacationTotalRepository = Mock(VacationTotalRepository)
+        def vacationTotalRepository = Mock(VacationTotalModelRepository)
         def vacationModelRepository = Mock(VacationModelRepository)
 
         def factory = new DefaultRepositoryFactory([userModelRepository, vacationTotalRepository, vacationModelRepository])
@@ -42,7 +42,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
         def result = vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
 
         then: 'repositories return expected values'
-        1 * userModelRepository.findByNameOrAliasesIn(inputUserName, Arrays.asList(inputUserName)) >> user
+        1 * userModelRepository.findByNameOrAliases(inputUserName, inputUserName) >> user
         1 * vacationTotalRepository.findByUserIdAndYear(user.get().getId(), 2017) >> vacationTotal
 
         result == expectedResult
@@ -64,7 +64,7 @@ class VacationServiceUnitTest extends AbstractSpockUnitTest {
         vacationService.createVacation(inputUserName, inputStartDate, inputEndDate)
 
         then: 'repositories return expected exception'
-        1 * userModelRepository.findByNameOrAliasesIn(inputUserName, Arrays.asList(inputUserName)) >> Optional.ofNullable(null)
+        1 * userModelRepository.findByNameOrAliases(inputUserName, inputUserName) >> Optional.ofNullable(null)
 
         thrown(RepositoryException)
     }
