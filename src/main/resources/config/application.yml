@@ -1,10 +1,9 @@
 ---
 info:
     app:
-        name: ${name}
-        description: ${description}
-        version: ${version}
-        built-on: ${builtOn}
+        name: 'Vacation bot'
+        description: 'The web application'
+        version: 1.0.0
 
 spring:
     data:
@@ -12,3 +11,6 @@ spring:
           host: localhost
           port: 27017
           database: devbot
+
+management:
+  context-path: /

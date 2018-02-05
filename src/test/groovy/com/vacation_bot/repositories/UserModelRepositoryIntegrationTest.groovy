@@ -10,12 +10,10 @@ class UserModelRepositoryIntegrationTest extends AbstractSpockIntegrationTest {
 
     def 'exercise retrieveAllUserNamesAndAliases'() {
         given: 'valid document'
-        def validDoc1 = new UserModel( userId: UUID.randomUUID(),
+        def validDoc1 = new UserModel( id: UUID.randomUUID(),
                 name: 'James Example',
-                aliases: [],
-                vacationTotal: 20,
-                year: 2017 )
-        def validDoc2 = new UserModel( userId: UUID.randomUUID(),
+                aliases: [] )
+        def validDoc2 = new UserModel( id: UUID.randomUUID(),
                 name: 'Super Man', aliases: ['superMan', 'superM'] )
 
         and: 'the documents are saved to the database'

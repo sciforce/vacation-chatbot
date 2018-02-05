@@ -1,0 +1,9 @@
+version: 0.1
+phases:
+  build:
+    commands:
+      - chmod +x gradlew
+      - ./gradlew --debug --stacktrace build
+artifacts:
+  files:
+    - /build/libs/vacation_bot-0.0.1-SNAPSHOT.jar

@@ -4,3 +4,12 @@ dependencies {
     testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
     testCompile "org.spockframework:spock-spring:1.1-groovy-2.4" // bridge between spring-test and Spock
 }
+
+test {
+    useJUnit {
+        includeCategories 'com.vacation_bot.UnitTest'
+    }
+    testLogging {
+        showStandardStreams = true
+    }
+}

@@ -1,15 +1,18 @@
 package com.vacation_bot.customization
 
 import com.vacation_bot.AbstractSpockUnitTest
+import com.vacation_bot.UnitTest
 import com.vacation_bot.core.customization.CustomizationService
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.UserModelRepository
+import org.junit.experimental.categories.Category
 import org.springframework.integration.support.MessageBuilder
 import spock.lang.Unroll
 
 /**
- * Unit level testing for {@link CustomizationService}
+ * Unit level testing for {@link CustomizationService}.
  */
+@Category( UnitTest )
 class CustomizationServiceUnitTest extends AbstractSpockUnitTest {
 
     @Unroll
@@ -42,9 +45,9 @@ class CustomizationServiceUnitTest extends AbstractSpockUnitTest {
         where:
         inputSentence                                                   || resultSentence                                               | expectedDates             | expectedNumbers       | expectedNames
         'How many days left for me?'                                    || 'how many days left for me'                                  | []                        | []                    | []
-        'How many days does James Bond have?'                           || 'how many days does _PERSON have'                            | []                        | []                    | ['James Bond']
-        'Can I take a vacation for one week starting from 12.01.19'     || 'can i take a vacation for one week starting from _DATE'     | ['12.01.19']              | []                    | []
-        'Show me my last 3 vacation reservation?'                       || 'show me my last _NUM vacation reservation'                  | []                        | ['3']                 | []
-        'Please register a vacation from 01.04.17 to 01.10.19'          || 'please register a vacation from _DATE to _DATE'             | ['01.04.17', '01.10.19']  | []                    | []
+        'How many days does James Bond have?'                           || 'how many days does _person have'                            | []                        | []                    | ['James Bond']
+        'Can I take a vacation for one week starting from 12.01.19'     || 'can i take a vacation for one week starting from _date'     | ['12.01.19']              | []                    | []
+        'Show me my last 3 vacation reservation?'                       || 'show me my last _num vacation reservation'                  | []                        | ['3']                 | []
+        'Please register a vacation from 01.04.17 to 01.10.19'          || 'please register a vacation from _date to _date'             | ['01.04.17', '01.10.19']  | []                    | []
     }
 }

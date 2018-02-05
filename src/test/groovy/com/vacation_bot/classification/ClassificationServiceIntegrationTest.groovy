@@ -29,16 +29,16 @@ class ClassificationServiceIntegrationTest extends AbstractSpockIntegrationTest 
         inputSentence                                                   || expectedClass
         'how many days left for me'                                     || SentenceClass.REQUEST_DAYS_LEFT
         'do i have any vacation days'                                   || SentenceClass.REQUEST_DAYS_LEFT
-        'how many days does _PERSON have'                               || SentenceClass.REQUEST_DAYS_LEFT
+        'how many days does _person have'                               || SentenceClass.REQUEST_DAYS_LEFT
         'how many days off do i have'                                   || SentenceClass.REQUEST_DAYS_LEFT
-        'can i take a vacation for _NUM week starting from _DATE'       || SentenceClass.REGISTER_VACATION
-        'show me my last _NUM vacation reservation'                     || SentenceClass.REQUEST_VACATION_LIST
+        'can i take a vacation for _num week starting from _date'       || SentenceClass.REGISTER_VACATION
+        'show me my last _num vacation reservation'                     || SentenceClass.REQUEST_VACATION_LIST
         'i want to ask for vacation'                                    || SentenceClass.REGISTER_VACATION
         'can i take a day off'                                          || SentenceClass.REGISTER_VACATION
         'i want to change my vacation days'                             || SentenceClass.EDIT_VACATION
         'cancel my request'                                             || SentenceClass.CANCEL_CURRENT_OPERATION
         'something different'                                           || SentenceClass.UNKNOWN
         'oh no it was wrong days'                                       || SentenceClass.CANCEL_CURRENT_OPERATION
-        'please register a vacation from _DATE to _DATE'                || SentenceClass.REGISTER_VACATION
+        'please register a vacation from _date to _date'                || SentenceClass.REGISTER_VACATION
     }
 }
