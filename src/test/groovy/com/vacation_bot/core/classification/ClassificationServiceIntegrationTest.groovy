@@ -1,4 +1,4 @@
-package com.vacation_bot.classification
+package com.vacation_bot.core.classification
 
 import com.vacation_bot.AbstractSpockIntegrationTest
 import com.vacation_bot.core.customization.CustomizedSentence

@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class ClassificationService {
 
-    public WordsService wordsService;
+    private final WordsService wordsService;
 
     public ClassificationService( WordsService aWordsService ) {
         wordsService = aWordsService;

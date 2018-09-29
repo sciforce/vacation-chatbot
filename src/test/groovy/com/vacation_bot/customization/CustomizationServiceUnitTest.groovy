@@ -1,18 +1,15 @@
 package com.vacation_bot.customization
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.UnitTest
 import com.vacation_bot.core.customization.CustomizationService
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.UserModelRepository
-import org.junit.experimental.categories.Category
 import org.springframework.integration.support.MessageBuilder
 import spock.lang.Unroll
 
 /**
  * Unit level testing for {@link CustomizationService}.
  */
-@Category( UnitTest )
 class CustomizationServiceUnitTest extends AbstractSpockUnitTest {
 
     @Unroll

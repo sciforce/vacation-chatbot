@@ -2,6 +2,7 @@ package com.vacation_bot.gateway.inbound;
 
 import com.vacation_bot.core.InternalTranslationPort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +26,7 @@ public class RestInboundGateway {
     @PostMapping()
     public void getResponse( @RequestBody String requestSentence ) {
         Message<String> message = MessageBuilder.withPayload( requestSentence ).build();
-        internalPort.processSentence( message );
+        String response = internalPort.processSentence( message );
+        ResponseEntity.ok( response );
     }
 }

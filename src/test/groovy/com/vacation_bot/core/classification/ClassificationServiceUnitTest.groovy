@@ -1,19 +1,15 @@
-package com.vacation_bot.classification
+package com.vacation_bot.core.classification
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.UnitTest
-import com.vacation_bot.core.classification.ClassificationService
 import com.vacation_bot.core.customization.CustomizedSentence
 import com.vacation_bot.core.words.WordsService
 import com.vacation_bot.shared.MessageHeaders
 import com.vacation_bot.shared.SentenceClass
-import org.junit.experimental.categories.Category
 import org.springframework.integration.support.MessageBuilder
 
 /**
  * Unit level test for {@link ClassificationService}.
  */
-@Category( UnitTest )
 class ClassificationServiceUnitTest extends AbstractSpockUnitTest {
 
     def 'exercise sentence classification'() {
