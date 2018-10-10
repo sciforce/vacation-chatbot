@@ -1,15 +1,12 @@
 package com.vacation_bot.words
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.UnitTest
 import com.vacation_bot.core.words.WordsService
 import com.vacation_bot.domain.models.SentenceModel
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.SentenceModelRepository
 import com.vacation_bot.shared.SentenceClass
-import org.junit.experimental.categories.Category
 
-@Category( UnitTest )
 class WordsServiceUnitTest extends AbstractSpockUnitTest {
 
     def 'exercise words extraction'() {

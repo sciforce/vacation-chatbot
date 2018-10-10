@@ -1,7 +1,6 @@
 package com.vacation_bot
 
 import com.vacation_bot.core.classification.ClassificationService
-import com.vacation_bot.core.vacation.VacationService
 import com.vacation_bot.repositories.UserModelRepository
 import com.vacation_bot.repositories.VacationModelRepository
 import com.vacation_bot.repositories.VacationTotalModelRepository
@@ -34,9 +33,6 @@ abstract class AbstractSpockIntegrationTest extends Specification {
 
     @Autowired
     ClassificationService classificationService
-
-    @Autowired
-    VacationService vacationService
 
     @LocalServerPort
     int port

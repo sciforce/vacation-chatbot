@@ -12,9 +12,22 @@
                  default-request-channel="entry-gateway-request-channel"
                  default-reply-channel="entry-gateway-response-channel"/>
 
-    <int:chain id="pre-process-chain" input-channel="entry-gateway-request-channel">
+    <int:chain id="pre-process-chain" input-channel="entry-gateway-request-channel" output-channel="">
         <int:service-activator ref="customizationService"/>
         <int:service-activator ref="classificationService"/>
+    </int:chain>
+
+    <int:header-value-router header-name="#{T(com.vacation_bot.shared.MessageHeaders).SENTENCE_CLASS_HEADER.toString()}" input-channel="request-process">
+        <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).REGISTER_VACATION.toString()}" channel="request-vacation-channel"/>
+        <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).REQUEST_DAYS_LEFT.toString()}" channel="request-days-left-channel"/>
+    </int:header-value-router>
+    
+    <int:chain input-channel="request-vacation-channel" output-channel="entry-gateway-response-channel">
+        <int:service-activator ref="registerVacationService"/>
+    </int:chain>
+    
+    <int:chain input-channel="request-days-left-channel" output-channel="entry-gateway-response-channel">
+        <int:service-activator ref="requestDaysLeftService"/>
     </int:chain>
 
 </beans>

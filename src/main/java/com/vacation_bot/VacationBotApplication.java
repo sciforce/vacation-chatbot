@@ -3,6 +3,8 @@ package com.vacation_bot;
 import com.mongodb.MongoClient;
 import com.vacation_bot.core.classification.ClassificationService;
 import com.vacation_bot.core.customization.CustomizationService;
+import com.vacation_bot.core.process.RegisterVacationService;
+import com.vacation_bot.core.process.RequestDaysLeftService;
 import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.repositories.DefaultRepositoryFactory;
 import com.vacation_bot.repositories.RepositoryFactory;
@@ -63,6 +65,16 @@ public class VacationBotApplication {
 	@Bean
 	public ClassificationService classificationService( WordsService wordsService ) {
 		return new ClassificationService( wordsService );
+	}
+
+	@Bean
+	public RegisterVacationService registerVacationService( final RepositoryFactory repositoryFactory ) {
+		return new RegisterVacationService( repositoryFactory );
+	}
+
+	@Bean
+	public RequestDaysLeftService requestDaysLeftService( final RepositoryFactory factory ) {
+		return new RequestDaysLeftService( factory );
 	}
 
 	@EventListener( ApplicationReadyEvent.class )

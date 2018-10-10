@@ -98,6 +98,8 @@ public class CustomizationService extends BaseService {
                 }
             }
         }
+        //TODO: what to do with duplicated names? For right now lets imagine that names are unique. It looks like we should find a way to set here the userId
+        // It should be possible to retrieve userId directly from Slack
         customizedSentence.setPersons( foundNames );
         return sentence;
     }
