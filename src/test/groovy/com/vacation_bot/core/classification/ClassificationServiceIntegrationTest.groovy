@@ -1,7 +1,7 @@
 package com.vacation_bot.core.classification
 
 import com.vacation_bot.AbstractSpockIntegrationTest
-import com.vacation_bot.core.customization.CustomizedSentence
+import com.vacation_bot.domain.CustomizedSentence
 import com.vacation_bot.shared.MessageHeaders
 import com.vacation_bot.shared.SentenceClass
 import org.springframework.integration.support.MessageBuilder

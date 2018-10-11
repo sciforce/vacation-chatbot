@@ -1,5 +1,6 @@
 package com.vacation_bot.core;
 
+import com.vacation_bot.domain.CustomizedSentence;
 import org.springframework.messaging.Message;
 
 /**
@@ -12,5 +13,5 @@ public interface InternalTranslationPort {
      * Process the input sentence and classify it.
      * @param sentence The SI message, containing a json payload representing the sentence to process.
      */
-    String processSentence( Message<String> sentence );
+    String processSentence( Message<CustomizedSentence> sentence );
 }

@@ -12,7 +12,7 @@
                  default-request-channel="entry-gateway-request-channel"
                  default-reply-channel="entry-gateway-response-channel"/>
 
-    <int:chain id="pre-process-chain" input-channel="entry-gateway-request-channel" output-channel="">
+    <int:chain id="pre-process-chain" input-channel="entry-gateway-request-channel" output-channel="request-process">
         <int:service-activator ref="customizationService"/>
         <int:service-activator ref="classificationService"/>
     </int:chain>

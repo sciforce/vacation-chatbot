@@ -1,9 +1,11 @@
 package com.vacation_bot.core.classification;
 
-import com.vacation_bot.core.customization.CustomizedSentence;
+import com.vacation_bot.domain.CustomizedSentence;
 import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.shared.MessageHeaders;
 import com.vacation_bot.shared.SentenceClass;
+import com.vacation_bot.shared.logging.AbstractLoggingAware;
+import com.vacation_bot.shared.logging.VacationBotLoggingMessages;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -16,17 +18,22 @@ import static java.util.stream.Collectors.toList;
 /**
  * Classify the input customized sentence.
  */
-public class ClassificationService {
+public class ClassificationService extends AbstractLoggingAware {
+
+    private static final String STAGE = "classification";
 
     private final WordsService wordsService;
 
-    public ClassificationService( WordsService aWordsService ) {
+    public ClassificationService( final WordsService aWordsService ) {
         wordsService = aWordsService;
     }
 
     @ServiceActivator
     public Message<CustomizedSentence> classifySentence( Message<CustomizedSentence> message ) {
+        getLogger().info( VacationBotLoggingMessages.STAGE_LOGGING.getMessage(), STAGE );
         SentenceClass classResult = processSentence( message.getPayload().getCustomizedSentence() );
+
+        getLogger().info( VacationBotLoggingMessages.CLASSIFICATION_RESULT.getMessage(), classResult.toString() );
 
         return MessageBuilder.fromMessage( message )
                 .setHeader( MessageHeaders.SENTENCE_CLASS_HEADER, classResult.toString() )
