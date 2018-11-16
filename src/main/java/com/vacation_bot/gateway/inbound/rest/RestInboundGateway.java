@@ -1,6 +1,7 @@
-package com.vacation_bot.gateway.inbound;
+package com.vacation_bot.gateway.inbound.rest;
 
 import com.vacation_bot.core.InternalTranslationPort;
+import com.vacation_bot.domain.CustomizedSentence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.integration.support.MessageBuilder;
@@ -25,7 +26,9 @@ public class RestInboundGateway {
 
     @PostMapping()
     public void getResponse( @RequestBody String requestSentence ) {
-        Message<String> message = MessageBuilder.withPayload( requestSentence ).build();
+        CustomizedSentence inputSentence = new CustomizedSentence();
+        inputSentence.setOriginalSentence( requestSentence );
+        Message<CustomizedSentence> message = MessageBuilder.withPayload( inputSentence ).build();
         String response = internalPort.processSentence( message );
         ResponseEntity.ok( response );
     }

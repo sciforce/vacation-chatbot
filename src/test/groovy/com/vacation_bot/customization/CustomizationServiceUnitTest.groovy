@@ -2,6 +2,7 @@ package com.vacation_bot.customization
 
 import com.vacation_bot.AbstractSpockUnitTest
 import com.vacation_bot.core.customization.CustomizationService
+import com.vacation_bot.domain.CustomizedSentence
 import com.vacation_bot.repositories.DefaultRepositoryFactory
 import com.vacation_bot.repositories.UserModelRepository
 import org.springframework.integration.support.MessageBuilder
@@ -20,7 +21,8 @@ class CustomizationServiceUnitTest extends AbstractSpockUnitTest {
         def sut = new CustomizationService( repositoryFactory )
 
         and: 'valid input message'
-        def input = MessageBuilder.withPayload( inputSentence ).build()
+        def sentence = new CustomizedSentence( originalSentence: inputSentence )
+        def input = MessageBuilder.withPayload( sentence ).build()
 
         when: 'the exercise method is called'
         def result = sut.customizeSentence( input )

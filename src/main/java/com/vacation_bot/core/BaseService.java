@@ -1,11 +1,12 @@
 package com.vacation_bot.core;
 
 import com.vacation_bot.repositories.*;
+import com.vacation_bot.shared.logging.AbstractLoggingAware;
 
 /**
  * Base class for services.
  */
-public abstract class BaseService {
+public abstract class BaseService extends AbstractLoggingAware {
 
     protected final RepositoryFactory repositoryFactory;
 

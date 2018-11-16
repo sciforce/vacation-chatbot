@@ -8,9 +8,12 @@ import com.vacation_bot.core.process.RequestDaysLeftService;
 import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.repositories.DefaultRepositoryFactory;
 import com.vacation_bot.repositories.RepositoryFactory;
+import com.vacation_bot.shared.ApplicationProperties;
+import com.vacation_bot.shared.logging.LoggingAwareBeanPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -27,9 +30,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-@SpringBootApplication
+@SpringBootApplication( scanBasePackages = {"me.ramswaroop.jbot", "com.vacation_bot"})
 @ImportResource( "classpath:META-INF.spring/application-context.xml" )
 @EnableMongoRepositories( basePackages = "com.vacation_bot.repositories" )
+@EnableConfigurationProperties( ApplicationProperties.class )
 @EnableCaching
 public class VacationBotApplication {
 
@@ -75,6 +79,11 @@ public class VacationBotApplication {
 	@Bean
 	public RequestDaysLeftService requestDaysLeftService( final RepositoryFactory factory ) {
 		return new RequestDaysLeftService( factory );
+	}
+
+	@Bean
+	public LoggingAwareBeanPostProcessor loggingAwareBeanPostProcessor() {
+		return new LoggingAwareBeanPostProcessor();
 	}
 
 	@EventListener( ApplicationReadyEvent.class )

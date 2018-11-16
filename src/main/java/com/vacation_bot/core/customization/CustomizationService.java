@@ -1,7 +1,9 @@
 package com.vacation_bot.core.customization;
 
 import com.vacation_bot.core.BaseService;
+import com.vacation_bot.domain.CustomizedSentence;
 import com.vacation_bot.repositories.RepositoryFactory;
+import com.vacation_bot.shared.logging.VacationBotLoggingMessages;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -18,6 +20,8 @@ import java.util.regex.Pattern;
 //TODO: understand day, week, month, year... write numbers
 public class CustomizationService extends BaseService {
 
+    private static final String STAGE = "customization";
+
     private static final String DATE_TOKEN = "_date";
 
     private static final String NUMBER_TOKEN = "_num";
@@ -29,11 +33,10 @@ public class CustomizationService extends BaseService {
     }
 
     @ServiceActivator
-    public Message<CustomizedSentence> customizeSentence( Message<String> message ) {
-        CustomizedSentence customizedSentence = new CustomizedSentence();
-        String originSentence = message.getPayload();
-        customizedSentence.setOriginalSentence( originSentence );
-        String updatedSentence = originSentence.toLowerCase();
+    public Message<CustomizedSentence> customizeSentence( Message<CustomizedSentence> message ) {
+        getLogger().info( VacationBotLoggingMessages.STAGE_LOGGING.getMessage(), STAGE );
+        CustomizedSentence customizedSentence = message.getPayload();
+        String updatedSentence = customizedSentence.getOriginalSentence().toLowerCase();
 
         // first find dates in the string. We should look for dates before removing the punctuation.
         updatedSentence = findDates( updatedSentence, customizedSentence ); // set the result into object
@@ -52,7 +55,7 @@ public class CustomizationService extends BaseService {
 
         //TODO: decode words abreviations into full words. I'm not sure what abreviations we should support. Will be added later.
 
-        return MessageBuilder.fromMessage( message ).withPayload( customizedSentence ).build();
+        return MessageBuilder.withPayload( customizedSentence ).copyHeaders( message.getHeaders() ).build();
     }
 
     private String findDates( String sentence, CustomizedSentence customizedSentence ) {

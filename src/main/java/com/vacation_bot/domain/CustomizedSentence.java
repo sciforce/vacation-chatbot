@@ -1,4 +1,4 @@
-package com.vacation_bot.core.customization;
+package com.vacation_bot.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,6 +13,11 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 public class CustomizedSentence {
+
+    /**
+     * The user identifier that usually comes from outside.
+     */
+    private String userExternalCode;
 
     /**
      * The original input sentence.

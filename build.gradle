@@ -31,7 +31,9 @@ repositories {
 }
 
 apply from: "$rootDir/gradle/lombok.gradle"
+apply from: "$rootDir/gradle/jbot.gradle"
 apply from: "$rootDir/gradle/spock.gradle"
+
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')

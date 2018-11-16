@@ -1,7 +1,7 @@
 package com.vacation_bot.core.process
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.core.customization.CustomizedSentence
+import com.vacation_bot.domain.CustomizedSentence
 import com.vacation_bot.domain.models.UserModel
 import com.vacation_bot.domain.models.VacationTotalModel
 import com.vacation_bot.repositories.DefaultRepositoryFactory

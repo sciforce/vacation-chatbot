@@ -1,7 +1,7 @@
 package com.vacation_bot.core.classification
 
 import com.vacation_bot.AbstractSpockUnitTest
-import com.vacation_bot.core.customization.CustomizedSentence
+import com.vacation_bot.domain.CustomizedSentence
 import com.vacation_bot.core.words.WordsService
 import com.vacation_bot.shared.MessageHeaders
 import com.vacation_bot.shared.SentenceClass
