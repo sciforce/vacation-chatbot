@@ -18,8 +18,8 @@ import spock.lang.Unroll
 class RegisterVacationServiceUnitTest extends AbstractSpockUnitTest {
 
     def inputUserName = 'Alex'
-    def inputStartDate = '2017-10-02'
-    def inputEndDate = '2017-10-20'
+    def inputStartDate = '02.10.17'
+    def inputEndDate = '20.10.17'
 
     @Shared
     def validUser = Optional.of( new UserModel( id: '1', name: 'Alex', email: 'alex@mail.com' ) )
@@ -43,7 +43,7 @@ class RegisterVacationServiceUnitTest extends AbstractSpockUnitTest {
         def result = sut.registerVacation( new CustomizedSentence( persons: [inputUserName], dates: [inputStartDate, inputEndDate] ) )
 
         then: 'repositories return expected values'
-        1 * userModelRepository.findByNameOrAliases( inputUserName, inputUserName ) >> user
+        1 * userModelRepository.findById( inputUserName ) >> user
         1 * vacationTotalRepository.findByUserIdAndYear( user.get().id, Calendar.getInstance().get( Calendar.YEAR ) ) >> vacationTotal
 
         and: 'documents are saved to the database as expected'

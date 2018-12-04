@@ -5,6 +5,8 @@ import com.vacation_bot.core.classification.ClassificationService;
 import com.vacation_bot.core.customization.CustomizationService;
 import com.vacation_bot.core.process.RegisterVacationService;
 import com.vacation_bot.core.process.RequestDaysLeftService;
+import com.vacation_bot.core.services.UserPort;
+import com.vacation_bot.core.services.UserService;
 import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.repositories.DefaultRepositoryFactory;
 import com.vacation_bot.repositories.RepositoryFactory;
@@ -23,6 +25,8 @@ import org.springframework.data.mongodb.core.ScriptOperations;
 import org.springframework.data.mongodb.core.script.ExecutableMongoScript;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,8 +56,18 @@ public class VacationBotApplication {
 	}
 
 	@Bean
-	DefaultRepositoryFactory repositoryFactory( List<MongoRepository> repositories ) {
+	public RestOperations restTemplate() {
+		return new RestTemplate();
+	}
+
+	@Bean
+	public DefaultRepositoryFactory repositoryFactory( List<MongoRepository> repositories ) {
 		return new DefaultRepositoryFactory( repositories );
+	}
+
+	@Bean
+	public UserPort userPort( RepositoryFactory repositoryFactory ) {
+		return new UserService( repositoryFactory );
 	}
 
 	@Bean
@@ -62,7 +76,7 @@ public class VacationBotApplication {
 	}
 
 	@Bean
-	WordsService wordsService( RepositoryFactory repositoryFactory ) {
+	public WordsService wordsService( RepositoryFactory repositoryFactory ) {
 		return new WordsService( repositoryFactory );
 	}
 

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.UUID;
@@ -37,17 +38,18 @@ public class RegisterVacationService extends BaseService {
     String registerVacation( final CustomizedSentence customizedSentence ) {
         getLogger().info( VacationBotLoggingMessages.REGISTER_VACATION_CHAIN.getMessage() );
         //TODO add verification for a single name and two days. Days order?
-        LocalDate startDate = LocalDate.parse( customizedSentence.getDates().get( 0 ) );
-        LocalDate endDate = LocalDate.parse( customizedSentence.getDates().get( 1 ) );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dd.MM.yy" );
+        LocalDate startDate = LocalDate.parse( customizedSentence.getDates().get( 0 ), formatter );
+        LocalDate endDate = LocalDate.parse( customizedSentence.getDates().get( 1 ), formatter );
         String userName = customizedSentence.getPersons().isEmpty() ? customizedSentence.getUserExternalCode() : customizedSentence.getPersons().get( 0 );
         return createVacation( userName, startDate, endDate );
     }
 
     private String createVacation( final String userName, final LocalDate startDate, final LocalDate endDate ) {
         int currentYear = Calendar.getInstance().get( Calendar.YEAR );
-        int period = (int) ChronoUnit.DAYS.between( startDate, endDate );
+        int period = (int) ChronoUnit.DAYS.between( startDate, endDate ) + 1;
 
-        UserModel user = getUserModelRepository().findByNameOrAliases( userName, userName )
+        UserModel user = getUserModelRepository().findById( userName )
                 .orElseThrow( () -> new RepositoryException( SharedConstants.USER_NOT_FOUND_MESSAGE ) );
 
         final VacationTotalModel vacationTotal = getVacationTotalRepository().findByUserIdAndYear( user.getId(), currentYear );

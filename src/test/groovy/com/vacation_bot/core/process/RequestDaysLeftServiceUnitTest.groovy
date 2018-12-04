@@ -33,10 +33,10 @@ class RequestDaysLeftServiceUnitTest extends AbstractSpockUnitTest {
         def customizationSentence = new CustomizedSentence( persons: [inputUserName] )
 
         when: 'the exercised method is called'
-        def result = sut.calcuateDaysLeft( customizationSentence )
+        def result = sut.calculateDaysLeft( customizationSentence )
 
         then: 'the use is retrieved from the system'
-        1 * userModelRepository.findByNameOrAliases( inputUserName, inputUserName ) >> validUser
+        1 * userModelRepository.findById( inputUserName ) >> validUser
 
         and: 'the totals are retrieved from the system'
         1 * vacationTotalRepository.findByUserIdAndYear( validUser.get().id, Calendar.getInstance().get( Calendar.YEAR ) ) >> validVacationTotal

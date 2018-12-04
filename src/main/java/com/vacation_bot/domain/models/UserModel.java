@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -30,6 +30,7 @@ public class UserModel {
      * The user name.
      */
     @Field( FieldNames.NAME )
+    @Indexed
     private String name;
 
     /**
@@ -42,6 +43,7 @@ public class UserModel {
      * The user name aliases.
      */
     @Field( FieldNames.ALIASES )
+    @Indexed
     private List<String> aliases;
 
     public static final class FieldNames {

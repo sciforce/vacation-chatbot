@@ -8,7 +8,8 @@ public enum VacationBotLoggingMessages {
     STAGE_LOGGING( "The {} stage!" ),
     CLASSIFICATION_RESULT( "The classification result is {}" ),
     REGISTER_VACATION_CHAIN( "The chain of processing request vacation sentence class" ),
-    DAYS_LEFT_CHAIN( "The chain of processing days left request" );
+    DAYS_LEFT_CHAIN( "The chain of processing days left request" ),
+    USER_NOT_FOUND( "The user was not found. Message details: {}." );
 
     private String message;
 
