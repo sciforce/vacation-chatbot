@@ -5,8 +5,12 @@ import com.vacation_bot.core.classification.ClassificationService;
 import com.vacation_bot.core.customization.CustomizationService;
 import com.vacation_bot.core.process.RegisterVacationService;
 import com.vacation_bot.core.process.RequestDaysLeftService;
+import com.vacation_bot.core.process.RequestVacationListService;
+import com.vacation_bot.core.process.UnknownRequestService;
 import com.vacation_bot.core.services.UserPort;
 import com.vacation_bot.core.services.UserService;
+import com.vacation_bot.core.validation.RegisterVacationValidator;
+import com.vacation_bot.core.validation.RequestVacationListValidator;
 import com.vacation_bot.core.words.WordsService;
 import com.vacation_bot.repositories.DefaultRepositoryFactory;
 import com.vacation_bot.repositories.RepositoryFactory;
@@ -93,6 +97,27 @@ public class VacationBotApplication {
 	@Bean
 	public RequestDaysLeftService requestDaysLeftService( final RepositoryFactory factory ) {
 		return new RequestDaysLeftService( factory );
+	}
+
+	@Bean
+	public RequestVacationListService requestVacationListService( final RepositoryFactory factory ) {
+		return new RequestVacationListService( factory );
+	}
+
+	@Bean
+	public UnknownRequestService unknownRequestService( final RepositoryFactory factory ) {
+		return new UnknownRequestService( factory );
+	}
+
+	// ====== FILTERS
+	@Bean
+	public RequestVacationListValidator requestVacationListValidator() {
+		return new RequestVacationListValidator();
+	}
+
+	@Bean
+	public RegisterVacationValidator registerVacationValidator() {
+		return new RegisterVacationValidator();
 	}
 
 	@Bean

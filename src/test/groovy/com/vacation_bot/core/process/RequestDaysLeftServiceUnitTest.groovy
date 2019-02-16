@@ -42,6 +42,6 @@ class RequestDaysLeftServiceUnitTest extends AbstractSpockUnitTest {
         1 * vacationTotalRepository.findByUserIdAndYear( validUser.get().id, Calendar.getInstance().get( Calendar.YEAR ) ) >> validVacationTotal
 
         and: 'the response are constructed as expected'
-        result == "You still have " + validVacationTotal.getVacationTotal() + " days left."
+        result.currentResponse == "You still have " + validVacationTotal.getVacationTotal() + " days left."
     }
 }

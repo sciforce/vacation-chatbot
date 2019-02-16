@@ -13,5 +13,5 @@ public interface InternalTranslationPort {
      * Process the input sentence and classify it.
      * @param sentence The SI message, containing a json payload representing the sentence to process.
      */
-    String processSentence( Message<CustomizedSentence> sentence );
+    CustomizedSentence processSentence( Message<CustomizedSentence> sentence );
 }

@@ -20,14 +20,26 @@
     <int:header-value-router header-name="#{T(com.vacation_bot.shared.MessageHeaders).SENTENCE_CLASS_HEADER.toString()}" input-channel="request-process">
         <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).REGISTER_VACATION.toString()}" channel="request-vacation-channel"/>
         <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).REQUEST_DAYS_LEFT.toString()}" channel="request-days-left-channel"/>
+        <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).REQUEST_VACATION_LIST.toString()}" channel="request-vacation-list"/>
+        <int:mapping value="#{T(com.vacation_bot.shared.SentenceClass).UNKNOWN.toString()}" channel="unknown-request"/>
     </int:header-value-router>
     
     <int:chain input-channel="request-vacation-channel" output-channel="entry-gateway-response-channel">
+        <int:filter ref="registerVacationValidator" discard-channel="entry-gateway-response-channel"/>
         <int:service-activator ref="registerVacationService"/>
     </int:chain>
     
     <int:chain input-channel="request-days-left-channel" output-channel="entry-gateway-response-channel">
         <int:service-activator ref="requestDaysLeftService"/>
+    </int:chain>
+
+    <int:chain input-channel="request-vacation-list" output-channel="entry-gateway-response-channel">
+        <int:filter ref="requestVacationListValidator" discard-channel="entry-gateway-response-channel"/>
+        <int:service-activator ref="requestVacationListService"/>
+    </int:chain>
+
+    <int:chain input-channel="unknown-request" output-channel="entry-gateway-response-channel">
+        <int:service-activator ref="unknownRequestService"/>
     </int:chain>
 
 </beans>

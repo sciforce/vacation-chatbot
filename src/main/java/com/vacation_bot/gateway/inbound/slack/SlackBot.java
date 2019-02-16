@@ -53,7 +53,8 @@ public class SlackBot extends Bot {
             CustomizedSentence inputSentence = new CustomizedSentence();
             inputSentence.setOriginalSentence( event.getText() );
             inputSentence.setUserExternalCode( event.getUserId() );
-            String response = internalPort.processSentence( MessageBuilder.withPayload( inputSentence ).build() );
+            String response = internalPort.processSentence( MessageBuilder.withPayload( inputSentence ).build() )
+                                          .getCurrentResponse();
             reply( session, event, new Message( response ) );
         }
     }

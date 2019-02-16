@@ -35,14 +35,14 @@ public class RegisterVacationService extends BaseService {
     }
 
     @ServiceActivator
-    String registerVacation( final CustomizedSentence customizedSentence ) {
+    CustomizedSentence registerVacation( final CustomizedSentence customizedSentence ) {
         getLogger().info( VacationBotLoggingMessages.REGISTER_VACATION_CHAIN.getMessage() );
-        //TODO add verification for a single name and two days. Days order?
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dd.MM.yy" );
         LocalDate startDate = LocalDate.parse( customizedSentence.getDates().get( 0 ), formatter );
         LocalDate endDate = LocalDate.parse( customizedSentence.getDates().get( 1 ), formatter );
         String userName = customizedSentence.getPersons().isEmpty() ? customizedSentence.getUserExternalCode() : customizedSentence.getPersons().get( 0 );
-        return createVacation( userName, startDate, endDate );
+        customizedSentence.setCurrentResponse( createVacation( userName, startDate, endDate ) );
+        return customizedSentence;
     }
 
     private String createVacation( final String userName, final LocalDate startDate, final LocalDate endDate ) {
