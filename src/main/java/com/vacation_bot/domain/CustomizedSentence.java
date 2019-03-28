@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,20 +28,25 @@ public class CustomizedSentence {
     /**
      * Customized sentence.
      */
-    private List<String> customizedSentence;
+    private List<String> customizedSentence = Collections.emptyList();
+
+    /**
+     * The current generated response;
+     */
+    private String currentResponse;
 
     /**
      * Found dates in the original sentence.
      */
-    private List<String> dates;
+    private List<String> dates = Collections.emptyList();
 
     /**
      * Found numbers in the original sentence.
      */
-    private List<String> numbers;
+    private List<String> numbers = Collections.emptyList();
 
     /**
      * Found person names in the original sentence.
      */
-    private List<String> persons;
+    private List<String> persons = Collections.emptyList();
 }

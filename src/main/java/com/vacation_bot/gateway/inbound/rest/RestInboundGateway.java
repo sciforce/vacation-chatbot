@@ -29,7 +29,7 @@ public class RestInboundGateway {
         CustomizedSentence inputSentence = new CustomizedSentence();
         inputSentence.setOriginalSentence( requestSentence );
         Message<CustomizedSentence> message = MessageBuilder.withPayload( inputSentence ).build();
-        String response = internalPort.processSentence( message );
+        String response = internalPort.processSentence( message ).getCurrentResponse();
         ResponseEntity.ok( response );
     }
 }

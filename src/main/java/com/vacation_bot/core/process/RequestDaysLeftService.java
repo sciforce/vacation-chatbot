@@ -22,15 +22,15 @@ public class RequestDaysLeftService extends BaseService {
     }
 
     @ServiceActivator
-    String calculateDaysLeft( final CustomizedSentence customizedSentence ) {
+    CustomizedSentence calculateDaysLeft( final CustomizedSentence customizedSentence ) {
         getLogger().info( VacationBotLoggingMessages.DAYS_LEFT_CHAIN.getMessage() );
-        //TODO Add validation of person names amount
         String userName = customizedSentence.getPersons().isEmpty() ? customizedSentence.getUserExternalCode() : customizedSentence.getPersons().get( 0 );
         int currentYear = Calendar.getInstance().get( Calendar.YEAR );
         UserModel user = getUserModelRepository().findById( userName )
                 .orElseThrow( () -> new RepositoryException( SharedConstants.USER_NOT_FOUND_MESSAGE ) );
         VacationTotalModel vacationTotal = getVacationTotalRepository().findByUserIdAndYear( user.getId(), currentYear );
         String validDays = vacationTotal != null ? vacationTotal.getVacationTotal() + "" : "no";
-        return "You still have " + validDays + " days left.";
+        customizedSentence.setCurrentResponse( "You still have " + validDays + " days left." );
+        return customizedSentence;
     }
 }

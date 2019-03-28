@@ -22,6 +22,8 @@ public class ClassificationService extends AbstractLoggingAware {
 
     private static final String STAGE = "classification";
 
+    private static final int TRUST_THRESHOLD = 2;
+
     private final WordsService wordsService;
 
     public ClassificationService( final WordsService aWordsService ) {
@@ -44,7 +46,7 @@ public class ClassificationService extends AbstractLoggingAware {
         Map<String, List<String>> wordsPerSentenceType = wordsService.calculateWordsWorth();
 
         SentenceClass classResult = SentenceClass.UNKNOWN;
-        int matches = 0;
+        int matches = TRUST_THRESHOLD;
 
         int classOneCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.REQUEST_DAYS_LEFT.toString() ) );
         int classTwoCount = countCommonElements( sentenceWords, wordsPerSentenceType.get( SentenceClass.REQUEST_VACATION_LIST.toString() ) );
